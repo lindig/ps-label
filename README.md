@@ -13,9 +13,9 @@ the line
 
 	[(No. 61) (Rust and Blue)] [(Mark Rothko) (1953)] card
 
-that is part simply added at the end of [labels.ps]. (PostScript is a stack
+that was simply added at the end of [labels.ps]. PostScript is a stack
 language where parameters come first which are then consumed by procedure
-`stack`. Here the two parameters are arrays, each containing two strings.)
+`stack`. Here the two parameters are arrays, each containing two strings.
 
 Labels are arranged in a 2-by-5 matrix per sheet with optional cut marks.
 The paper format is DIN A4 but can be easily changed to Letter (around line
