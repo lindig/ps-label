@@ -8,7 +8,7 @@ above and below a dividing line.
 
 ![label](./images/label.png)
 
-Labels are arranged in a 2-by-5 matrix per sheet with optionional cut
+Labels are arranged in a 2-by-5 matrix per sheet with optional cut
 marks. The paper format is DIN A4 but can be easily changed to Letter
 (around line 29 of [labels.ps]).
 
@@ -61,7 +61,7 @@ default the lower left corner of a page.)
 
 # Fonts
 
-Labels use the open-source font FiraSans that is part of the repository.
+Labels use the open-source font [FiraSans] that is part of the repository.
 These are included already in [labels.ps]. Fonts are governed by their own
 copyright.
 
@@ -70,3 +70,4 @@ copyright.
 [MIT License](./LICENSE.md)
 
 [labels.ps]:	./labels.ps "PostScript file labels.ps"
+[FirsSans]:		https://en.wikipedia.org/wiki/Fira_Sans "FiraSans font"
