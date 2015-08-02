@@ -2,7 +2,7 @@
 # PostScript Labels
 
 This is a single PostScript [labels.ps] file to create and print labels for
-exhibitions or anything that can use labels that consists of two parts,
+exhibitions or anything that can use labels that consist of two parts,
 like using two languages. Each label consists of one or two centered lines
 above and below a dividing line.
 
