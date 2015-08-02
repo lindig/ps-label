@@ -8,8 +8,9 @@ above and below a dividing line.
 
 ![label](./images/label.png)
 
-Labels are arranged on in a 2-by-5 matrix per sheet with optionional cut
-marks.
+Labels are arranged in a 2-by-5 matrix per sheet with optionional cut
+marks. The paper format is DIN A4 but can be easily changed to Letter
+(around line 29 of [labels.ps]).
 
 ![label](./images/labels.png)
 
