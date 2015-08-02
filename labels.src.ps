@@ -1,0 +1,240 @@
+%!PS-Adobe-2.0
+% vim: fileencoding=latin1
+%
+% (c) 2015 Christian Lindig <lindig@gmail.com>
+%
+% Print labels with centered text; one or two lines at top and bottom:
+%
+%   Top Line 1
+%   Top Line 2
+%   ----------
+%  Bottom Line 1
+%  Bottom Line 2
+%
+% To convert this to PDF, use pstopdf(1) on OS X. When printing the PDF
+% file be careful to make sure the file isn't scaled but printed at 100%.
+%
+% This file is in Latin1 encoding because PostScript does not support
+% Unicode/UTF-8 natively.
+
+/in     { 72 mul }      bind def
+/cm     { 28.3465 mul } bind def
+/mm     { cm 10 div }   bind def
+
+% print cut marks when true - useful for debugging
+/cutmarks       true def
+
+% page size 
+/pagedim        [8.5 in  11 in] def % Letter
+/pagedim        [210 mm 297 mm] def % DIN A4
+
+/pagewidth      { pagedim 0 get } bind def
+/pageheight     { pagedim 1 get } bind def
+
+% size of a label
+/hsize      pagewidth  10 mm sub 2 div def
+/vsize      pageheight 10 mm sub 5 div def 
+
+% rows and columns on page, gaps between rows and columns
+/rows       5  def
+/columns    2  def
+/hgap       0 mm def
+/vgap       0 mm def
+
+% left and bottom margin on page. This assumes the block of labels
+% is centered on a page. If not, use explicit dimentsions like 2mm.
+/lmargin 
+    pagewidth columns hsize mul sub columns 1 sub hgap mul sub 2 div def
+/bmargin    
+    pageheight rows vsize mul sub rows 1 sub vgap mul sub 2 div def
+	%
+
+% left and right margin on a label. I'm using this for the content of a
+% label.
+/left       10 def
+/right      hsize 10 sub def
+/center     hsize 2 div def
+
+% colors 
+/setcmyk  { aload pop setcmykcolor } bind def
+/black  [ 0.00 0.00 0.00 1.00 ] def     % black
+/grey   [ 0.00 0.00 0.00 0.40 ] def     % grey
+
+
+% counts labels - used for positioning
+/count      0 def 
+
+% font encoding
+/recode {
+    findfont
+    dup maxlength dict begin
+    {
+        1 index /FID ne { def } { pop pop } ifelse
+    } forall
+    /Encoding exch def
+    dup /FontName exch def
+    currentdict end definefont pop
+} bind def
+
+% We include fonts here - done by the Makefile
+%%@Fonts
+
+% fonts in Latin 1 encoding
+/H  ISOLatin1Encoding /Helvetica recode
+/HB ISOLatin1Encoding /Helvetica-Bold recode
+/HI ISOLatin1Encoding /Helvetica-Oblique recode
+/PI ISOLatin1Encoding /Palatino-BoldItalic recode
+/FM ISOLatin1Encoding /FiraSans-Medium recode
+/FI ISOLatin1Encoding /FiraSans-Italic recode
+/F { findfont exch scalefont setfont } def
+
+
+% vertical line distance
+/lineskip 24 def
+
+% - nl => - move position down and to the left (newline)
+/nl { currentpoint exch pop left exch lineskip sub moveto   } def
+/nc { currentpoint exch pop center exch lineskip sub moveto } def
+
+% - next => -
+/next {
+    /count count 1 add def
+    count rows columns mul mod 0 eq { 
+        showpage 
+    } if
+} def
+
+
+% - coordinates => x y
+% returns x, y coordinates based on count
+% bottom left is 0,0 cards to the right are (0,1), (0,2), ..
+/coordinates {
+    count columns mod
+    count columns idiv rows mod
+} def
+
+
+% x y cross => draws cross at position
+/crosssize 5 def
+/cross {
+    gsave
+    translate
+    newpath
+    0.7 setlinewidth
+    0 crosssize 2 div moveto
+    0 crosssize 2 div neg lineto stroke
+    crosssize 2 div neg 0 moveto
+    crosssize 2 div 0 lineto stroke
+    grestore
+} def
+
+% (string) centerup
+% [(string) (string) ..] centerup=> show strings centered on a label
+
+/centerdown {
+    dup type /stringtype eq { 
+        [ exch ] % put into array
+    } if 
+    {
+        center currentpoint exch pop moveto
+        dup stringwidth pop 2 div neg 0 rmoveto show
+        nl
+    } forall
+} def
+
+/centerup {
+    dup type /stringtype eq { 
+        [ exch ] % put into array
+    } if 
+    dup length 1 sub lineskip mul 0 exch rmoveto
+    {
+        center currentpoint exch pop moveto
+        dup stringwidth pop 2 div neg 0 rmoveto show
+        nl
+    } forall
+} def
+
+
+% n vskip => - move cursor down by n
+/vskip {
+    0 exch neg rmoveto
+} def
+
+% [(top) ..] [(bottom) ..] card => -
+/card {
+    6 dict begin
+    gsave
+    
+    /bottom exch def
+    /top exch def
+    coordinates
+    /y exch def
+    /x exch def
+
+    lmargin x hgap mul add x hsize mul add
+    bmargin y vgap mul add y vsize mul add 
+    translate
+
+    % draw cutmarks at corners of the label
+    cutmarks {    
+        grey setcmyk
+        0 0 cross
+        hsize 0 cross
+        hsize vsize cross
+        0 vsize cross
+    } if
+
+    black setcmyk
+    
+    % upper text
+    center vsize 3 div 2 mul 5 sub moveto 
+    18 /FM F top centerup
+
+    % line 3 cm
+    0.4 setlinewidth
+    newpath center 1.5 cm neg add vsize 2 div moveto 3 cm 0 rlineto stroke
+
+    % lower text
+    center vsize 3 div 1 mul 5 sub moveto
+    18 /FI F bottom centerdown
+
+    grestore
+    end
+    next % advance counter, emit page if full
+} def
+
+% emit showpage unless the last label just filled the page
+/finalize {
+	count rows columns mul mod 0 ne {
+		showpage
+	} if
+}	
+def	
+
+% setup page
+<<  
+    /Duplex			false 
+    /Tumble			false
+    /PageSize		pagedim
+    /ImagingBBox	null
+>> setpagedevice 
+
+
+%% Put labels here
+(No. 3/No. 13)(Mark Rothko) card
+
+%% You can have two lines at the top and bottom each.
+%% In that case lines need to be put into an array [...] 
+[(No. 61) (Rust and Blue)] [(Mark Rothko) (1953)] card
+[(For Darks in Red)] [(Mark Rothko) (1958)] card
+
+%% You can repeat cards. Note how to escape () in strings.
+3 { 
+	[(Untitled) (\(Black on Grey\))] [(Mark Rothko) (1970)] card 
+} repeat
+
+% this marks the end and ensures that the final page is emitted
+finalize
+
+
+    
