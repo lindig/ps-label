@@ -1,10 +1,10 @@
 
 # PostScript Labels
 
-This is a single PostScript file to create and print labels for exhibitions
-or anything that can use labels that consits of two parts, like using two
-languages. Each label constists of one or two centered lines above and
-below a dividing line.
+This is a single PostScript [labels.ps] file to create and print labels for
+exhibitions or anything that can use labels that consists of two parts,
+like using two languages. Each label consists of one or two centered lines
+above and below a dividing line.
 
 ![label](./images/label.png)
 
@@ -25,7 +25,7 @@ The typical workflow to print such labels is:
 All you need is the file [labels.ps] from this distribution. All other
 files are useful for developers but not required for creating labels.
 
-The file [labels.ps] is in ISO-Latin-1 encoding because PostScript nativelu
+The file [labels.ps] is in ISO-Latin-1 encoding because PostScript natively
 cannot deal with UTF-8. This is important if you want to use non-ASCII
 characters.
 
@@ -53,6 +53,10 @@ strings that go at the top and the bottom of the card. If you want two
 lines, these strings need to go into an array. Strings in PostScript are
 delimited by parentheses. Inside a string you need to escape them with a
 backslash.  Likewise, the percent sign `%` needs to be escaped as `\%`.
+
+The first label goes into the lower left corner of the page and the next
+one goes to the right of it. (The origin of PostScript coordinates is by
+default the lower left corner of a page.)
 
 # Fonts
 
