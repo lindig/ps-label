@@ -70,4 +70,4 @@ copyright.
 [MIT License](./LICENSE.md)
 
 [labels.ps]:	./labels.ps "PostScript file labels.ps"
-[FirsSans]:		https://en.wikipedia.org/wiki/Fira_Sans "FiraSans font"
+[FiraSans]:		https://en.wikipedia.org/wiki/Fira_Sans "FiraSans font"
